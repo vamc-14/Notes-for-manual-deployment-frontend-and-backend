@@ -1,0 +1,37 @@
+Step-1: Create/Open Your Project Folder
+mkdir project-name
+cd project-name
+
+Step-2: Initialize Git
+git init
+
+Step-3: Add Your Files to Staging Area
+git add .
+
+Step-4: Commit the Files
+git commit -m "my first frontend code"
+
+Step-5: Push to GitHub for First Time
+git push -u origin main
+
+##################################################
+
+Future Changes
+
+Whenever you update the project:
+
+git add .
+git commit -m "your message"
+git push
+
+####################################################
+
+Final Correct Command Order (Short Points)
+
+1️ git init
+2️ git add .
+3️ git commit -m "message"
+4️ git remote add origin URL
+5️ git branch -M main
+6️ git push -u origin main
+7️ git push
