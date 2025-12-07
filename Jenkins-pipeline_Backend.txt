@@ -1,0 +1,100 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Git Repo') {
+            steps {
+                git branch: "master", url: "https://github.com/vamc-14/django-helloworld.git"
+            }
+        }
+
+        stage('Create venv if not exists') {
+            steps {
+                sh '''
+                    if [ ! -d "venv" ]; then
+                        echo "No venv found! Creating venv..."
+                        python3 -m venv venv
+                    else
+                        echo "venv already exists. Skipping creation."
+                    fi
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install gunicorn
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Migrations') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    python manage.py migrate
+                '''
+            }
+        }
+
+        stage('Create Gunicorn Service') {
+            steps {
+                sh '''
+                    echo "Creating systemd service file..."
+                    sudo tee /etc/systemd/system/helloworld.service > /dev/null <<EOF
+[Unit]
+Description=Gunicorn service for helloworld Django project
+After=network.target
+
+[Service]
+User=jenkins
+Group=www-data
+WorkingDirectory=/var/lib/jenkins/workspace/1st-pipeline
+ExecStart=/var/lib/jenkins/workspace/1st-pipeline/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 helloworld.wsgi:application
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+                    sudo systemctl daemon-reload
+                    sudo systemctl enable helloworld.service
+                    sudo systemctl restart helloworld.service
+                '''
+            }
+        }
+
+        stage('Configure Nginx Reverse Proxy') {
+            steps {
+                sh '''
+                    echo "Creating Nginx configuration..."
+
+                    sudo cat /etc/nginx/sites-available/helloworld.conf <<EOF
+server {
+    listen 80;
+    server_name localhost;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+EOF
+
+                    sudo ln -sf /etc/nginx/sites-available/helloworld.conf /etc/nginx/sites-enabled/helloworld.conf
+
+                    sudo nginx -t
+                    sudo systemctl restart nginx
+                    sudo systemctl status nginx --no-pager
+                '''
+            }
+        }
+    }
+}
