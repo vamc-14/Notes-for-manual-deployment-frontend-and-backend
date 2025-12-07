@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Git Repo') {
+            steps {
+                git branch: "master", url: "https://github.com/vamc-14/HTML-Template.git"
+            }
+        }
+
+        stage('Zip Build Artifact') {
+            steps {
+                sh '''
+                    echo "Zipping workspace..."
+                    zip -r frontend.zip ./*
+                    echo "Zip completed!"
+                '''
+            }
+        }
+
+        stage('Deploy to Server') {
+            steps {
+                sh '''
+                    # Create folder if not exists
+                    if [ ! -d "/var/www/html/hello" ]; then
+                        echo "Creating deployment folder..."
+                        sudo mkdir -p /var/www/html/hello
+                    else
+                        echo "Deployment folder already exists!"
+                    fi
+
+                    # Move zip file to deployment path
+                    sudo mv frontend.zip /var/www/html/hello/
+
+                    cd /var/www/html/hello/
+
+                    # Unzip and replace files
+                    sudo unzip -o frontend.zip
+					sudo rm frontend.zip
+
+                    echo "Deployment completed!"
+                '''
+            }
+        }
+    }
+}
