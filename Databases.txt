@@ -1,0 +1,76 @@
+Database Concept:
+
+
+step1 : 
+    
+	  First, install PostgreSQL on the server using the official guide.
+	  https://neon.com/postgresql/postgresql-getting-started/install-postgresql-linux
+	  
+Step2:
+
+      After installation, open PostgreSQL using psql.
+	  
+	        psql -U postgres -h localhost -p 5432 ---->>  "This is for localhost"
+			
+			sudo -u postgres psql ----->>  "This is for serever "
+			
+           \l shows all databases.
+           \c dbname switches to a specific database.
+		   
+		   
+Step3:
+
+      Inside create a database, we can:
+      Create tables      ==== CREATE TABLE employees ( id SERIAL PRIMARY KEY, name VARCHAR(100), department VARCHAR(50),salary INT); 
+      Insert data        ==== INSERT INTO employees (name, department, salary)  VALUES ('Ravi', 'IT', 50000); 
+	  Alter Table        ==== ALTER TABLE employees  ADD COLUMN joining_date DATE; 
+      Update data        ==== UPDATE employees SET salary = 55000 WHERE name = 'ABC';
+      Delete data        ==== DELETE FROM employees  WHERE name = 'Ravi'; 
+      Modify table structure
+
+
+Ste4: 
+
+      We can take a backup of the database using pg_dump.
+	  
+	  pg_dump -U postgres -d ABC > XYZ
+
+Step5:
+
+      That backup can be restored into the same database or another database.
+	  
+	  psql -U postgres -d companydb -f companydb_backup.sql
+
+step6:
+   
+      We can automate this process:
+
+      Put backup and restore commands in a shell script.
+
+      Run the script with one command. 
+	 
+		 File:
+		 #!/bin/bash
+		 # Variables
+		 SRC_DB="gdb"
+		 DEST_DB="gdb_copy"
+		 BACKUP_DIR="/home/ubuntu/db_backups"
+		 DATE=$(date +"%Y%m%d_%H%M%S")
+		 BACKUP_FILE="$BACKUP_DIR/${SRC_DB}_$DATE.sql"
+
+		 # Create backup directory if not exists
+		 mkdir -p $BACKUP_DIR
+
+		 # Take Backup
+		 sudo -u postgres pg_dump $SRC_DB > $BACKUP_FILE
+
+		 # Restore into another DB
+		 sudo -u postgres psql $DEST_DB < $BACKUP_FILE
+
+		 # Log
+		 echo "Backup & Restore completed at $(date)" >> $BACKUP_DIR/db_sync.log
+	 
+	 	 
+Step7:
+
+	  Use a cron job to run it automatically at regular intervals (for example, every 2 minutes).

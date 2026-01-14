@@ -1,0 +1,72 @@
+Pre-Check Commands
+sudo apt update
+
+# Install Git & Nginx
+sudo apt install -y git nginx
+
+# Install Node & NPM
+sudo apt install -y nodejs npm
+
+
+============================================================================================
+
+React Frontend Setup
+mkdir react-frontend
+cd react-frontend
+
+git clone https://github.com/Syknapse/react-hello-world-app react-frontend
+cd react-frontend
+
+npm install
+npm run build
+
+==============================================================================================
+
+
+Nginx Configuration
+
+Create Nginx config file:
+
+sudo nano /etc/nginx/sites-available/react-frontend
+
+
+Paste the following:
+
+server {
+    listen 80;
+    server_name prov;
+
+    root /var/www/react-frontend/build;
+    index index.html index.htm;
+
+    location / {
+        try_files $uri /index.html;
+    }
+}
+
+
+sudo ln -s /etc/nginx/sites-available/react-frontend /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+
+===============================================================================================
+
+Troubleshooting (If Not Working)
+
+Check if build folder exists:
+
+ls /home/vamsi/projects/react-frontend
+
+=================================================================================================
+
+if error occurs or output is not generated please use this commands
+
+sudo rm -f /etc/nginx/sites-enabled/*
+sudo ln -s /etc/nginx/sites-available/react-frontend /etc/nginx/sites-enabled/react-frontend
+
+sudo rm -rf /var/www/react-frontend
+sudo mkdir -p /var/www/react-frontend
+sudo cp -r ~/react-frontend/react-frontend/build /var/www/react-frontend/
+
+sudo nginx -t
+sudo systemctl restart nginx

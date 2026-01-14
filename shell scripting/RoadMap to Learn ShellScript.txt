@@ -1,0 +1,100 @@
+# RoadMap to Learn ShellScript ( Basic )
+
+1. Basic Shell Commands
+* Before scripting, you should be comfortable with:
+* Navigating the file system: cd, ls, pwd
+* File operations: cp, mv, rm, touch, mkdir
+* Viewing/editing files: cat, less, head, tail, nano, vim
+* Permissions: chmod, chown
+* Process control: ps, top, kill ---doubt
+=====================================
+2. Scripting Basics
+* Start writing .sh files and learn:
+* Shebang (#!/bin/bash)
+* Making scripts executable (chmod +x script.sh)
+* Running a script (./script.sh)
+=====================================
+3. Variables
+* Defining and using variables: name="Alice"
+* Accessing variables: $name
+* Command substitution: today=date or today=$(date)
+=====================================
+4. Input and Output
+* echo, printf
+* Reading user input: read name ----------===========================================doubt goat
+* Redirecting output: >, >>, 2>, &>
+=====================================
+5. Conditionals
+* if, else, elif
+* Comparison operators: -eq, -ne, -lt, -gt, -z, -n
+* String comparisons: =, !=, <, >
+* File checks: -f, -d, -e, -r, -w, -x
+=====================================
+6. Loops
+* for loops
+* while loops
+* until loops
+* Loop control: break, continue
+=====================================
+7. Functions
+* Defining functions
+* Passing arguments to functions             ================  doubt
+* Return values
+=====================================
+8. Command Line Arguments
+* $0, $1, $2, ..., $@, $#
+* Validating and processing arguments
+=====================================
+9. Arrays
+* Declaring arrays
+* Accessing elements: ${arr[0]}
+* Looping through arrays
+=====================================
+10. String Manipulation
+* Substring extraction
+* Replacement
+* Length calculation
+* Pattern matching with [[ ]]
+=====================================
+11. Error Handling
+* Exit codes: $?
+* exit command
+* Using trap to catch signals or clean up on exit
+=====================================
+12. Working with Files
+* Reading/writing files line by line
+* File descriptors
+* cat, grep, awk, sed, cut, sort, uniq, wc
+=====================================
+13. Pipelines and Redirection
+* Using | to pipe commands
+* Combining redirections and pipes
+* Reading input from a file (<)
+=====================================
+14. Debugging Scripts
+* Using set -x, set -e, set -u
+* Echo statements for debugging
+=====================================
+15. Advanced Topics
+* Here documents (<<EOF)
+* Regular expressions (grep, [[ =~ ]])
+* Environment variables
+* Sourcing files (source or .) or (dot files)
+* Writing portable scripts (POSIX compliance)
+=====================================
+16. Common Shell Tools to Know
+* xargs, find, basename, dirname, cut, tr, tee
+* awk for text processing
+* sed for stream editing
+=====================================
+17. Crontab (Scheduling Jobs)
+* Syntax of crontab -e
+* Automating script execution
+=====================================
+* Real-World Practice Ideas
+* Backup script for a directory
+* Log rotation and compression
+* Automated update checker
+* Bulk file renamer
+* CPU/memory usage monitor
+=====================================

@@ -183,6 +183,14 @@ server {
 }
 
 
+//////
+###pipeline..automate ..
+cd /home/vamci/djdhhdhhdhd...
+git pull
+pip install ......
+migration....
+restart service and nginx..
+
 
 
 
